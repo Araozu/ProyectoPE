@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:proyecto_pe/pages/dieta.dart';
+import 'package:proyecto_pe/pages/homepage.dart';
 import 'package:proyecto_pe/pages/login.dart';
 import 'package:proyecto_pe/routes/pages.dart';
 
@@ -13,7 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "Proyecto PE",
-      home: Login(),
+      home: const HomePage(),
       routes: Pages.routes,
     );
   }
