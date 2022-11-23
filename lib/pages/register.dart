@@ -1,7 +1,31 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import "package:flutter/material.dart";
 
-class Register extends StatelessWidget {
+class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);
+
+  @override
+  State<Register> createState() => RegisterState();
+}
+
+class RegisterState extends State<Register> {
+  String correo = "";
+  String contrasena = "";
+
+  void setCorreo(String? s) {
+    correo = s ?? "";
+  }
+
+  void setContrasena(String s) {
+    contrasena = s ?? "";
+  }
+
+  void registrar() {
+    if (correo != "" && contrasena != "") {
+      FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: correo, password: contrasena);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +37,7 @@ class Register extends StatelessWidget {
               Container(
                 margin: EdgeInsets.only(left: 33, right: 33, top: 50),
                 alignment: Alignment.center,
-                child: Text(
+                child: const Text(
                   "BIENVENIDO",
                   style: TextStyle(
                       fontSize: 24,
@@ -29,14 +53,14 @@ class Register extends StatelessWidget {
                   borderRadius: BorderRadius.circular(50),
 
                   color: Colors.grey[300],
-                  boxShadow: [BoxShadow(
+                  boxShadow: const [BoxShadow(
                       offset: Offset(0, 10),
                       blurRadius: 50,
                       color: Color(0xffEEEEEE)
                   )],
                 ),
                 alignment: Alignment.center,
-                child: TextField(
+                child: const TextField(
                   style: TextStyle(fontSize: 15),
                   cursorColor: Color(0xfff91f1f),
                   decoration: InputDecoration(
@@ -52,14 +76,14 @@ class Register extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(50),
                   color: Colors.grey[300],
-                  boxShadow: [BoxShadow(
+                  boxShadow: const [BoxShadow(
                       offset: Offset(0, 10),
                       blurRadius: 50,
                       color: Color(0xffEEEEEE)
                   )],
                 ),
                 alignment: Alignment.center,
-                child: TextField(
+                child: const TextField(
                   style: TextStyle(fontSize: 15),
                   cursorColor: Color(0xfff91f1f),
                   decoration: InputDecoration(
@@ -86,6 +110,7 @@ class Register extends StatelessWidget {
                 child: TextField(
                   style: TextStyle(fontSize: 15),
                   cursorColor: Color(0xfff91f1f),
+                  onChanged: setCorreo,
                   decoration: InputDecoration(
                     hintText: "Correo",
                     enabledBorder: InputBorder.none,
@@ -202,6 +227,7 @@ class Register extends StatelessWidget {
                   style: TextStyle(fontSize: 15),
                   obscureText: true,
                   cursorColor: Color(0xfff91f1f),
+                  onChanged: setCorreo,
                   decoration: InputDecoration(
                     hintText: "Contraseña",
                     enabledBorder: InputBorder.none,
@@ -210,9 +236,7 @@ class Register extends StatelessWidget {
                 ),
               ),
               GestureDetector(
-                onTap: () => {
-
-                },
+                onTap: registrar,
                 child: Container(
                   margin: EdgeInsets.only(left: 33, right: 33, top: 40),
                   padding: EdgeInsets.only(left: 20, right: 20, top: 20),
