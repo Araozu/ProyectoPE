@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:proyecto_pe/auth_service.dart';
 import 'package:proyecto_pe/pages/dieta.dart';
 import 'package:proyecto_pe/pages/homepage.dart';
 import 'package:proyecto_pe/routes/pages.dart';
@@ -13,6 +14,7 @@ import "package:firebase_core/firebase_core.dart";
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
   FirebaseAuth.instance.authStateChanges().listen((User? user) {
     if (user == null) {
       print("User signed out");
@@ -31,7 +33,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "Proyecto PE",
-      home: const Register(),
+      home: const HomePage(),
       routes: Pages.routes,
     );
   }

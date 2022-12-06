@@ -1,4 +1,6 @@
 import "package:flutter/material.dart";
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:proyecto_pe/auth_service.dart';
 
 class Login extends StatelessWidget {
   const Login({Key? key}) : super(key: key);
@@ -63,32 +65,32 @@ class Login extends StatelessWidget {
                 ),
               ),
             ),
-          Container(
-            margin: EdgeInsets.only(left: 33, right: 33, top: 70),
-            padding: EdgeInsets.only(left: 20, right: 20),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(50),
+            Container(
+              margin: EdgeInsets.only(left: 33, right: 33, top: 30),
+              padding: EdgeInsets.only(left: 20, right: 20),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(50),
 
-              color: Colors.grey[300],
-              boxShadow: [BoxShadow(
-                offset: Offset(0, 10),
-                blurRadius: 50,
-                color: Color(0xffEEEEEE)
-              )],
-            ),
-            alignment: Alignment.center,
-            child: TextField(
-              style: TextStyle(fontSize: 15),
-              cursorColor: Color(0xfff91f1f),
-              decoration: InputDecoration(
-                hintText: "Usuario",
-                enabledBorder: InputBorder.none,
-                focusedBorder: InputBorder.none,
+                color: Colors.grey[300],
+                boxShadow: [BoxShadow(
+                  offset: Offset(0, 10),
+                  blurRadius: 50,
+                  color: Color(0xffEEEEEE)
+                )],
+              ),
+              alignment: Alignment.center,
+              child: TextField(
+                style: TextStyle(fontSize: 15),
+                cursorColor: Color(0xfff91f1f),
+                decoration: InputDecoration(
+                  hintText: "Usuario",
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                ),
               ),
             ),
-          ),
             Container(
-              margin: EdgeInsets.only(left: 33, right: 33, top: 60),
+              margin: EdgeInsets.only(left: 33, right: 33, top: 20),
               padding: EdgeInsets.only(left: 20, right: 20),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(50),
@@ -113,9 +115,7 @@ class Login extends StatelessWidget {
             ),
 
             GestureDetector(
-              onTap: () => {
-
-              },
+              onTap: () {},
               child: Container(
                 margin: EdgeInsets.only(left: 33, right: 33, top: 60),
                 padding: EdgeInsets.only(left: 20, right: 20, top: 20),
@@ -136,6 +136,38 @@ class Login extends StatelessWidget {
                   ),
                 ),
               ),
+            ),
+
+            const SizedBox(height: 25),
+
+            ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.black,
+                minimumSize: const Size(300, 50),
+              ),
+              icon: const FaIcon(FontAwesomeIcons.google, color: Colors.blue),
+              label: const Text("Iniciar sesión con Google"),
+              onPressed: () {
+                // Iniciar sesion con Google
+                AuthService().googleSignIn();
+              },
+            ),
+
+            const SizedBox(height: 10),
+
+            ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.black,
+                minimumSize: const Size(300, 50),
+              ),
+              icon: const FaIcon(FontAwesomeIcons.github, color: Colors.black),
+              label: const Text("Iniciar sesión con GitHub"),
+              onPressed: () {
+                // Iniciar sesion con Google
+                AuthService().githubSignIn();
+              },
             ),
 
             Container(
