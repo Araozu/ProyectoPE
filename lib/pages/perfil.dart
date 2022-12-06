@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import 'package:proyecto_pe/auth_service.dart';
 import 'package:proyecto_pe/routes/routes.dart';
 
 class Perfil extends StatelessWidget {
@@ -6,13 +7,15 @@ class Perfil extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var user = AuthService().getUser()!;
+
     return Scaffold(
       body: SingleChildScrollView(
           child: Column(
             children: [
               Container(
                 height: 340,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                     borderRadius: BorderRadius.only(bottomLeft: Radius.circular(150), bottomRight:Radius.circular(150)),
                     color: Color(0xfff91f1f)
                 ),
@@ -21,7 +24,7 @@ class Perfil extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(
+                      const Text(
                         "Perfil",
                         style: TextStyle(
                             fontSize: 24,
@@ -39,12 +42,12 @@ class Perfil extends StatelessWidget {
                 ),
               ),
               Container(
-                margin: EdgeInsets.only(left: 59, right: 59, top: 70),
-                padding: EdgeInsets.only(left: 24, right: 24, top: 38, bottom: 30),
+                margin: const EdgeInsets.only(left: 59, right: 59, top: 70),
+                padding: const EdgeInsets.only(left: 24, right: 24, top: 38, bottom: 30),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(25),
                   color: Colors.grey[300],
-                  boxShadow: [BoxShadow(
+                  boxShadow: const [BoxShadow(
                       offset: Offset(0, 10),
                       blurRadius: 25,
                       color: Color(0xffEEEEEE)
@@ -65,7 +68,8 @@ class Perfil extends StatelessWidget {
                           ),
                         ),
                           Text(
-                            "Estephany Mayra",
+                            (user.displayName ?? "-").substring(0, 17),
+                            // "Estephany Mayra",
                             style: TextStyle(
                                 fontSize: 15
                             ),
@@ -85,7 +89,7 @@ class Perfil extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          "Surco Alvarez",
+                          "-",
                           style: TextStyle(
                               fontSize: 15
                           ),
@@ -105,7 +109,8 @@ class Perfil extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          "esurcoa@unsa.edu.pe",
+                          user.email ?? "-",
+                          // "esurcoa@unsa.edu.pe",
                           style: TextStyle(
                               fontSize: 15
                           ),
@@ -116,7 +121,7 @@ class Perfil extends StatelessWidget {
                     Container(
                       padding: EdgeInsets.only(bottom: 10),
                       child: Row(
-                      children: [
+                      children: const [
                         Text(
                           "Pais: ",
                           style: TextStyle(
@@ -125,7 +130,7 @@ class Perfil extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          "Peru",
+                          "-",
                           style: TextStyle(
                               fontSize: 15
                           ),
@@ -136,7 +141,7 @@ class Perfil extends StatelessWidget {
                     Container(
                       padding: EdgeInsets.only(bottom: 10),
                       child: Row(
-                      children: [
+                      children: const [
                         Text(
                           "Region: ",
                           style: TextStyle(
@@ -145,7 +150,7 @@ class Perfil extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          "Arequipa",
+                          "-",
                           style: TextStyle(
                               fontSize: 15
                           ),
@@ -156,7 +161,7 @@ class Perfil extends StatelessWidget {
                     Container(
                       padding: EdgeInsets.only(bottom: 10),
                       child: Row(
-                      children: [
+                      children: const [
                         Text(
                           "Provincia: ",
                           style: TextStyle(
@@ -165,7 +170,7 @@ class Perfil extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          "Caylloma",
+                          "-",
                           style: TextStyle(
                               fontSize: 15
                           ),
@@ -176,7 +181,7 @@ class Perfil extends StatelessWidget {
                     Container(
                       padding: EdgeInsets.only(bottom: 10),
                       child: Row(
-                      children: [
+                      children: const [
                         Text(
                           "Distrito: ",
                           style: TextStyle(
@@ -185,7 +190,7 @@ class Perfil extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          "Majes",
+                          "-",
                           style: TextStyle(
                               fontSize: 15
                           ),
