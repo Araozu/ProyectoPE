@@ -1,5 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import "package:flutter/material.dart";
+import 'package:proyecto_pe/routes/routes.dart';
+
+import '../auth_service.dart';
 
 class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);
@@ -9,8 +13,45 @@ class Register extends StatefulWidget {
 }
 
 class RegisterState extends State<Register> {
+  // 0 cargando, 1 tiene cuenta, -1 no tiene cuenta
+  var status = 0;
+
+  var db = FirebaseFirestore.instance;
+
   String correo = "";
   String contrasena = "";
+
+  init() async {
+    print("INNIT");
+    var user = AuthService().getUser();
+    var correoUsuarioLogeado = user?.email;
+
+    await db.collection("usuario").get().then((ev) {
+      for (var doc in ev.docs) {
+        var data = doc.data();
+        String? correo = data["correo"];
+
+        if (correo != null && correoUsuarioLogeado != null && correo == correoUsuarioLogeado) {
+          status = 1;
+          print("EXISTE CORREO");
+
+          // Ir a inicio
+          Navigator.of(context).pushNamed(Routes.login);
+        }
+      }
+
+      status = -1;
+      print("NO EXISTE CORREO");
+
+      setState(() {});
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // init();
+  }
 
   void setCorreo(String? s) {
     correo = s ?? "";
@@ -21,14 +62,28 @@ class RegisterState extends State<Register> {
   }
 
   void registrar() {
-    if (correo != "" && contrasena != "") {
-      FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: correo, password: contrasena);
-    }
+
   }
 
   @override
   Widget build(BuildContext context) {
+    if (status == 0) {
+      init();
+
+      return Scaffold(
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                alignment: Alignment.center,
+                child: Text("Cargando...")
+              )
+            ],
+          )
+        )
+      );
+    }
+
     return Scaffold(
       body: SingleChildScrollView(
           child: Column(
@@ -94,30 +149,7 @@ class RegisterState extends State<Register> {
                 ),
               ),
 
-              Container(
-                margin: EdgeInsets.only(left: 33, right: 33, top: 30),
-                padding: EdgeInsets.only(left: 20, right: 20),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50),
-                  color: Colors.grey[300],
-                  boxShadow: [BoxShadow(
-                      offset: Offset(0, 10),
-                      blurRadius: 50,
-                      color: Color(0xffEEEEEE)
-                  )],
-                ),
-                alignment: Alignment.center,
-                child: TextField(
-                  style: TextStyle(fontSize: 15),
-                  cursorColor: Color(0xfff91f1f),
-                  onChanged: setCorreo,
-                  decoration: InputDecoration(
-                    hintText: "Correo",
-                    enabledBorder: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                  ),
-                ),
-              ),
+
               Container(
                 margin: EdgeInsets.only(left: 33, right: 33, top: 30),
                 padding: EdgeInsets.only(left: 20, right: 20),
@@ -210,31 +242,8 @@ class RegisterState extends State<Register> {
                   ),
                 ),
               ),
-              Container(
-                margin: EdgeInsets.only(left: 33, right: 33, top: 30),
-                padding: EdgeInsets.only(left: 20, right: 20),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50),
-                  color: Colors.grey[300],
-                  boxShadow: [BoxShadow(
-                      offset: Offset(0, 10),
-                      blurRadius: 50,
-                      color: Color(0xffEEEEEE)
-                  )],
-                ),
-                alignment: Alignment.center,
-                child: TextField(
-                  style: TextStyle(fontSize: 15),
-                  obscureText: true,
-                  cursorColor: Color(0xfff91f1f),
-                  onChanged: setCorreo,
-                  decoration: InputDecoration(
-                    hintText: "Contraseña",
-                    enabledBorder: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                  ),
-                ),
-              ),
+
+
               GestureDetector(
                 onTap: registrar,
                 child: Container(
@@ -258,8 +267,6 @@ class RegisterState extends State<Register> {
                   ),
                 ),
               ),
-
-
 
             ],
           )

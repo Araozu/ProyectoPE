@@ -65,6 +65,8 @@ class Login extends StatelessWidget {
                 ),
               ),
             ),
+
+            /*
             Container(
               margin: EdgeInsets.only(left: 33, right: 33, top: 30),
               padding: EdgeInsets.only(left: 20, right: 20),
@@ -138,6 +140,8 @@ class Login extends StatelessWidget {
               ),
             ),
 
+            */
+
             const SizedBox(height: 25),
 
             ElevatedButton.icon(
@@ -170,6 +174,7 @@ class Login extends StatelessWidget {
               },
             ),
 
+            /*
             Container(
               alignment: Alignment.center,
               margin: EdgeInsets.only(left: 120, right: 91, top: 30),
@@ -199,6 +204,7 @@ class Login extends StatelessWidget {
                 )
               ),
             ),
+             */
 
           ],
         )
