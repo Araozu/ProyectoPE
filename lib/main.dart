@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:proyecto_pe/auth_service.dart';
 import 'package:proyecto_pe/pages/dieta.dart';
 import 'package:proyecto_pe/pages/homepage.dart';
+import 'package:proyecto_pe/pages/mapa.dart';
 import 'package:proyecto_pe/routes/pages.dart';
 
 import 'package:proyecto_pe/pages/login.dart';

@@ -12,6 +12,8 @@ class Comerciante {
   final String pais;
   final String provincia;
   final String region;
+  final double lat;
+  final double long;
 
   Comerciante({
     required this.nombres,
@@ -20,6 +22,8 @@ class Comerciante {
     required this.pais,
     required this.provincia,
     required this.region,
+    required this.lat,
+    required this.long,
   });
 
   static Comerciante from(Map<String, dynamic> data) {
@@ -30,21 +34,8 @@ class Comerciante {
       pais: data['pais'],
       provincia: data['provincia'],
       region: data['region'],
-    );
-  }
-
-  factory Comerciante.fromFirestore(
-    DocumentSnapshot<Map<String, dynamic>> snapshot,
-    SnapshotOptions? options,
-  ) {
-    final data = snapshot.data();
-    return Comerciante(
-      nombres: data?['nombres'],
-      correo: data?['correo'],
-      distrito: data?['distrito'],
-      pais: data?['pais'],
-      provincia: data?['provincia'],
-      region: data?['region'],
+      lat: (data['lat'] as int).toDouble(),
+      long: (data['long'] as int).toDouble(),
     );
   }
 
@@ -119,6 +110,8 @@ class _HomePageState extends State<HomePage> {
                 "¿Qué\ncomeré?",
                 style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
               ),
+
+              /*
               TextField(
                 decoration: InputDecoration(
                     hintText: 'Comida o lugar',
@@ -129,25 +122,34 @@ class _HomePageState extends State<HomePage> {
                   // do something
                 },
               ),
+              */
+
               SizedBox(
                   height: 40,
                   child: ListView(
                     padding: const EdgeInsets.all(8),
                     scrollDirection: Axis.horizontal,
-                    children: const [
+                    children: [
                       Text("Comidas"),
+                      Container(width: 10),
                       Text(
                         "Pan",
                         style: TextStyle(
-                            color: Colors.red,
-                            decoration: TextDecoration.underline),
-                      ),
+                            // color: Colors.red,
+                            // decoration: TextDecoration.underline),
+                        )),
+                      Container(width: 10),
                       Text("Bebidas"),
+                      Container(width: 10),
                       Text("Provisiones"),
+                      Container(width: 10),
                       Text("Pasteles"),
+                      Container(width: 10),
                       Text("Verduras"),
                     ],
                   )),
+
+
               StreamBuilder(
                   stream: FirebaseFirestore.instance
                       .collection("usuario")
