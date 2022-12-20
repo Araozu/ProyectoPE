@@ -5,7 +5,6 @@ class Publicacion {
   final String nombre;
   final int cantidad;
   final String tipo;
-  final String direccion;
   final String imagen;
   final double precioNormal;
   final double precio;
@@ -15,7 +14,6 @@ class Publicacion {
       {required this.nombre,
       required this.cantidad,
       required this.tipo,
-      required this.direccion,
       required this.imagen,
       required this.precioNormal,
       required this.precio,
@@ -26,7 +24,6 @@ class Publicacion {
         nombre: data['nombre'],
         cantidad: data['cantidad'],
         tipo: data['tipo'],
-        direccion: data['direccion'],
         imagen: data['imagen'],
         precioNormal: (data['precioNormal'] as int).toDouble(),
         precio: (data['precio'] as int).toDouble(),

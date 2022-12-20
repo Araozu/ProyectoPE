@@ -61,29 +61,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  /*
-  var db = FirebaseFirestore.instance;
-
-  var coms = <Comerciante>[];
-  void init() {
-    // lista de comerciantes
-    final query = db.collection("usuario").where(
-        "comerciante", isEqualTo: true);
-    query.get().then((data) {
-      var items = data.docs;
-      coms = data.docs.map((x) => Comerciante.from(x.data())).toList();
-
-      setState(() {});
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    init();
-  }
-   */
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,7 +70,7 @@ class _HomePageState extends State<HomePage> {
         foregroundColor: Colors.black,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.menu),
+          icon: const Icon(Icons.account_circle),
           onPressed: () {
             Navigator.of(context).pushNamed(Routes.perfil);
           },

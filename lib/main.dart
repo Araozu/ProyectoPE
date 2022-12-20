@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto_pe/auth_service.dart';
+import 'package:proyecto_pe/pages/crear_publicacion.dart';
 import 'package:proyecto_pe/pages/dieta.dart';
 import 'package:proyecto_pe/pages/homepage.dart';
 import 'package:proyecto_pe/pages/mapa.dart';
