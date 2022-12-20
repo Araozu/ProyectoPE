@@ -160,12 +160,11 @@ class _HomePageState extends State<HomePage> {
                       );
                     }
 
-                    var x = snapshot.data!.docs
-                        .map((e) => Comerciante.from(e.data()));
+                    var x = snapshot.data!.docs.map((e) => Comerciante.from(e.data()));
                     return ListView(
                       scrollDirection: Axis.vertical,
                       shrinkWrap: true,
-                      children: x.map((c) => Tienda()).toList(),
+                      children: x.map((c) => Tienda(comerciante: c)).toList(),
                     );
                   })
             ]),

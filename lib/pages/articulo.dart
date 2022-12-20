@@ -1,7 +1,56 @@
 import "package:flutter/material.dart";
+import 'package:proyecto_pe/pages/homepage.dart';
 
-class Articulo extends StatelessWidget {
-  const Articulo({Key? key}) : super(key: key);
+class Publicacion {
+  final String nombre;
+  final int cantidad;
+  final String tipo;
+  final String direccion;
+  final String imagen;
+  final double precioNormal;
+  final double precio;
+  final String correoComerciante;
+
+  Publicacion(
+      {required this.nombre,
+      required this.cantidad,
+      required this.tipo,
+      required this.direccion,
+      required this.imagen,
+      required this.precioNormal,
+      required this.precio,
+      required this.correoComerciante});
+
+  static Publicacion from(Map<String, dynamic> data) {
+    return Publicacion(
+        nombre: data['nombre'],
+        cantidad: data['cantidad'],
+        tipo: data['tipo'],
+        direccion: data['direccion'],
+        imagen: data['imagen'],
+        precioNormal: (data['precioNormal'] as int).toDouble(),
+        precio: (data['precio'] as int).toDouble(),
+        correoComerciante: data['correoComerciante']);
+  }
+}
+
+class Articulo extends StatefulWidget {
+  const Articulo({Key? key, required this.publicacion}) : super(key: key);
+
+  final Publicacion publicacion;
+
+  @override
+  State<Articulo> createState() => _ArticuloState(publicacion);
+}
+
+int percentage(double partial, double total) {
+  return ((100 * (total - partial)) / total).round();
+}
+
+class _ArticuloState extends State<Articulo> {
+  _ArticuloState(this.publicacion);
+
+  final Publicacion publicacion;
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +79,7 @@ class Articulo extends StatelessWidget {
                         top: -40,
                         child: CircleAvatar(
                           radius: 60,
-                          backgroundImage: NetworkImage(
-                              'https://www.melskitchencafe.com/wp-content/uploads/rustic-bread-updated2-600x900.jpg'),
+                          backgroundImage: NetworkImage(publicacion.imagen),
                         )),
                   ],
                 ),
@@ -39,31 +87,31 @@ class Articulo extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                      "Quedan 30",
-                      style: TextStyle(
+                      "Quedan ${publicacion.cantidad}",
+                      style: const TextStyle(
                           color: Colors.green, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
                 Text(
-                  "Pan Frances",
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  publicacion.nombre,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 Row(
                   children: [
                     Text(
-                      "-20%",
+                      "-${percentage(publicacion.precio, publicacion.precioNormal)}%",
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     Text(
-                      "S/. 0.5",
+                      "S/. ${publicacion.precioNormal}",
                       style: TextStyle(decoration: TextDecoration.underline),
                     ),
-                    Spacer(
+                    const Spacer(
                       flex: 5,
                     ),
                   ],
@@ -72,8 +120,8 @@ class Articulo extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
-                      "S/. 0.3 U",
-                      style: TextStyle(fontSize: 20),
+                      "S/. ${publicacion.precio} U",
+                      style: const TextStyle(fontSize: 20),
                     )
                   ],
                 )
