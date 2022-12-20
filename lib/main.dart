@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "Proyecto PE",
-      home: const Perfil(),
+      home: AuthService().handleAuthState(),
       routes: Pages.routes,
     );
   }

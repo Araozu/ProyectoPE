@@ -7,7 +7,7 @@ class Perfil extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var user = AuthService().getUser()!;
+    var user = AuthService().getUser();
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -68,7 +68,7 @@ class Perfil extends StatelessWidget {
                           ),
                         ),
                           Text(
-                            (user.displayName ?? "-").substring(0, 17),
+                            (user?.displayName ?? "-").substring(0, 17),
                             // "Estephany Mayra",
                             style: TextStyle(
                                 fontSize: 15
@@ -109,7 +109,7 @@ class Perfil extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          user.email ?? "-",
+                          user?.email ?? "-",
                           // "esurcoa@unsa.edu.pe",
                           style: TextStyle(
                               fontSize: 15
@@ -197,6 +197,13 @@ class Perfil extends StatelessWidget {
                         ),
                       ],
                     ),
+                    ),
+                    TextButton(
+                        onPressed: (){
+                          AuthService().signOut();
+                          Navigator.of(context).pushNamed(Routes.login);
+                        },
+                        child: Text("Cerrar sesion"),
                     )
                   ],
                 ),

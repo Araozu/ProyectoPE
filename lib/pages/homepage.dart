@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 
+import '../routes/pages.dart';
 import '../routes/routes.dart';
 
 class HomePage extends StatelessWidget {
@@ -16,9 +17,7 @@ class HomePage extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.menu),
           onPressed: () {
-            if (Navigator.canPop(context)) {
-              Navigator.pop(context);
-            }
+            Navigator.of(context).pushNamed(Routes.perfil);
           },
         ),
       ),
