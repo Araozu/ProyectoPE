@@ -62,6 +62,9 @@ class MapaState extends State<Mapa> {
               child: FlutterMap(
                 options: MapOptions(
                   center: LatLng(lat, long),
+                  onLongPress: (pos, latlng) {
+
+                  },
                 ),
                 children: [
                   TileLayer(

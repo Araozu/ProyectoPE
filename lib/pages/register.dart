@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import "package:flutter/material.dart";
+import 'package:flutter_map/flutter_map.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:proyecto_pe/routes/routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:latlong2/latlong.dart';
 
 import '../auth_service.dart';
 
@@ -12,6 +14,16 @@ class Register extends StatefulWidget {
 
   @override
   State<Register> createState() => RegisterState();
+}
+
+Marker create(double lat, double long) {
+  return Marker(
+    width: 160,
+    height: 160,
+    point: LatLng(lat, long),
+    builder: (ctx) => const Icon(Icons.pin_drop),
+    anchorPos: AnchorPos.align(AnchorAlign.center),
+  );
 }
 
 class RegisterState extends State<Register> {
@@ -67,6 +79,8 @@ class RegisterState extends State<Register> {
   String region = "";
   String provincia = "";
   String distrito = "";
+  double lat = 0;
+  double long = 0;
 
 
   void setNombres(String? s) {
@@ -93,6 +107,10 @@ class RegisterState extends State<Register> {
     distrito = s ?? "";
   }
 
+  void setLatLong(double lat, double long) {
+    this.lat = lat;
+    this.long = long;
+  }
 
   void registrar() {
     if (
@@ -115,6 +133,8 @@ class RegisterState extends State<Register> {
       "provincia": provincia,
       "region": region,
       "comerciante": esComerciante,
+      "lat": lat,
+      "long": long,
     };
 
     db.collection("usuario").add(usuario).then((DocumentReference doc) {
@@ -122,6 +142,18 @@ class RegisterState extends State<Register> {
       Navigator.of(context).pushNamed(Routes.home);
     });
   }
+
+  var markers = <Marker>[
+    /*
+    Marker(
+      width: 160,
+      height: 160,
+      point: LatLng(lat, long),
+      builder: (ctx) => const Icon(Icons.pin_drop),
+      anchorPos: anchorPos,
+    ),
+     */
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -329,6 +361,35 @@ class RegisterState extends State<Register> {
                 ),
               ),
 
+              Container(height: 20),
+              const Text("Ubicacion del negocio:"),
+
+              esComerciante ? SizedBox(
+                height: 400,
+                child: FlutterMap(
+                  options: MapOptions(
+                    center: LatLng(-16.4099486, -71.5383974),
+                    onLongPress: (pos, latlng) {
+                      var lat = latlng.latitude;
+                      var long = latlng.longitude;
+
+                      print("LAT: ${lat}, LONG: ${long}");
+
+                      markers = [create(lat, long)];
+                      setLatLong(lat, long);
+                      setState(() {});
+                    },
+                  ),
+                  children: [
+                    TileLayer(
+                      urlTemplate:
+                      'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                      userAgentPackageName: 'dev.fleaflet.flutter_map.example',
+                    ),
+                    MarkerLayer(markers: markers),
+                  ],
+                ),
+              ) : Container(),
 
               GestureDetector(
                 onTap: registrar,
@@ -360,3 +421,5 @@ class RegisterState extends State<Register> {
     );
   }
 }
+
+

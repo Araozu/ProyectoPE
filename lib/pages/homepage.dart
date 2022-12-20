@@ -34,8 +34,8 @@ class Comerciante {
       pais: data['pais'],
       provincia: data['provincia'],
       region: data['region'],
-      lat: (data['lat'] as int).toDouble(),
-      long: (data['long'] as int).toDouble(),
+      lat: data['lat'],
+      long: data['long'],
     );
   }
 
