@@ -1,29 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Mapa extends StatefulWidget {
-  const Mapa({Key? key, required this.lat, required this.long}) : super(key: key);
-
-  final double lat;
-  final double long;
+  const Mapa({Key? key}) : super(key: key);
 
   @override
-  State<Mapa> createState() => MapaState(lat: lat, long: long);
+  State<Mapa> createState() => MapaState();
 }
 
 class MapaState extends State<Mapa> {
-  MapaState({required this.lat, required this.long});
-
-  final double lat;
-  final double long;
+  double lat = -16.4099486;
+  double long = -71.5383974;
 
   late AnchorPos<dynamic> anchorPos;
+
+  void init() async {
+    final prefs = await SharedPreferences.getInstance();
+    lat = prefs.getDouble("lat")!;
+    long = prefs.getDouble("long")!;
+    setState(() {});
+  }
 
   @override
   void initState() {
     super.initState();
     anchorPos = AnchorPos.align(AnchorAlign.center);
+    init();
   }
 
 

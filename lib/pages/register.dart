@@ -400,12 +400,12 @@ class RegisterState extends State<Register> {
                   height: 54,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(50),
-                    boxShadow: [BoxShadow(
+                    boxShadow: const [BoxShadow(
                         offset: Offset(0, 10),
                         color: Color(0xfff91f1f)
                     )],
                   ),
-                  child: Text(
+                  child: const Text(
                     "Ingresar",
                     style: TextStyle(
                         color: Colors.white,

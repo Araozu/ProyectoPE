@@ -53,7 +53,7 @@ class _TiendaState extends State<Tienda> {
 
               return ListView(
                 scrollDirection: Axis.horizontal,
-                children: x.map((p) => Articulo(publicacion: p)).toList(),
+                children: x.map((p) => Articulo(publicacion: p, lat: comerciante.lat, long: comerciante.long,)).toList(),
               );
             },
           ),

@@ -1,5 +1,8 @@
 import "package:flutter/material.dart";
 import 'package:proyecto_pe/pages/homepage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../routes/routes.dart';
 
 class Publicacion {
   final String nombre;
@@ -35,12 +38,14 @@ class Publicacion {
 }
 
 class Articulo extends StatefulWidget {
-  const Articulo({Key? key, required this.publicacion}) : super(key: key);
+  const Articulo({Key? key, required this.publicacion, required this.lat, required this.long}) : super(key: key);
 
   final Publicacion publicacion;
+  final double lat;
+  final double long;
 
   @override
-  State<Articulo> createState() => _ArticuloState(publicacion);
+  State<Articulo> createState() => _ArticuloState(publicacion, lat, long);
 }
 
 int percentage(double partial, double total) {
@@ -48,13 +53,24 @@ int percentage(double partial, double total) {
 }
 
 class _ArticuloState extends State<Articulo> {
-  _ArticuloState(this.publicacion);
+  _ArticuloState(this.publicacion, this.lat, this.long);
 
   final Publicacion publicacion;
+  final double lat;
+  final double long;
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
+    return GestureDetector(
+      onTap: () {
+        var nav = Navigator.of(context);
+        SharedPreferences.getInstance().then((prefs) async {
+          await prefs.setDouble("lat", lat);
+          await prefs.setDouble("long", long);
+          nav.pushNamed(Routes.mapa);
+        });
+      },
+      child: Column(children: [
       Container(
         height: 40,
       ),
@@ -128,6 +144,7 @@ class _ArticuloState extends State<Articulo> {
               ],
             )),
       )
-    ]);
+    ])
+    );
   }
 }

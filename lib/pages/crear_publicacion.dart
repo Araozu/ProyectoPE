@@ -245,8 +245,8 @@ class _CrearPublicacionState extends State<CrearPublicacion> {
             GestureDetector(
               onTap: crear,
               child: Container(
-                margin: EdgeInsets.only(left: 33, right: 33, top: 40),
-                padding: EdgeInsets.only(left: 20, right: 20, top: 20),
+                margin: const EdgeInsets.only(left: 33, right: 33, top: 40),
+                padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
                 alignment: Alignment.center,
                 height: 54,
                 decoration: BoxDecoration(
