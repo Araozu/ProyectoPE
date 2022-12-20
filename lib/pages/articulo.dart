@@ -20,13 +20,16 @@ class Publicacion {
       required this.correoComerciante});
 
   static Publicacion from(Map<String, dynamic> data) {
+    var precioNormal = data['precioNormal'];
+    var precio = data['precio'];
+
     return Publicacion(
         nombre: data['nombre'],
         cantidad: data['cantidad'],
         tipo: data['tipo'],
         imagen: data['imagen'],
-        precioNormal: (data['precioNormal'] as int).toDouble(),
-        precio: (data['precio'] as int).toDouble(),
+        precioNormal: precioNormal.runtimeType == int ? (precioNormal as int).toDouble() : precioNormal,
+        precio: precio.runtimeType == int ? (precio as int).toDouble() : precio,
         correoComerciante: data['correoComerciante']);
   }
 }
