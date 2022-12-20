@@ -1,10 +1,97 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import "package:flutter/material.dart";
+import 'package:proyecto_pe/pages/articulo.dart';
+import 'package:proyecto_pe/pages/tienda.dart';
 
-import '../routes/pages.dart';
 import '../routes/routes.dart';
 
-class HomePage extends StatelessWidget {
+class Comerciante {
+  final String nombres;
+  final String correo;
+  final String distrito;
+  final String pais;
+  final String provincia;
+  final String region;
+
+  Comerciante({
+    required this.nombres,
+    required this.correo,
+    required this.distrito,
+    required this.pais,
+    required this.provincia,
+    required this.region,
+  });
+
+  static Comerciante from(Map<String, dynamic> data) {
+    return Comerciante(
+      nombres: data['nombres'],
+      correo: data['correo'],
+      distrito: data['distrito'],
+      pais: data['pais'],
+      provincia: data['provincia'],
+      region: data['region'],
+    );
+  }
+
+  factory Comerciante.fromFirestore(
+    DocumentSnapshot<Map<String, dynamic>> snapshot,
+    SnapshotOptions? options,
+  ) {
+    final data = snapshot.data();
+    return Comerciante(
+      nombres: data?['nombres'],
+      correo: data?['correo'],
+      distrito: data?['distrito'],
+      pais: data?['pais'],
+      provincia: data?['provincia'],
+      region: data?['region'],
+    );
+  }
+
+  Map<String, dynamic> toFirestore() {
+    return {
+      if (nombres != null) "nombres": nombres,
+      if (correo != null) "correo": correo,
+      if (distrito != null) "distrito": distrito,
+      if (pais != null) "pais": pais,
+      if (provincia != null) "provincia": provincia,
+      if (region != null) "region": region,
+      "comerciante": true,
+      "apellidos": "",
+    };
+  }
+}
+
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  /*
+  var db = FirebaseFirestore.instance;
+
+  var coms = <Comerciante>[];
+  void init() {
+    // lista de comerciantes
+    final query = db.collection("usuario").where(
+        "comerciante", isEqualTo: true);
+    query.get().then((data) {
+      var items = data.docs;
+      coms = data.docs.map((x) => Comerciante.from(x.data())).toList();
+
+      setState(() {});
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    init();
+  }
+   */
 
   @override
   Widget build(BuildContext context) {
@@ -61,132 +148,28 @@ class HomePage extends StatelessWidget {
                       Text("Verduras"),
                     ],
                   )),
-              Tienda(),
-              Tienda(),
+              StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection("usuario")
+                      .where("comerciante", isEqualTo: true)
+                      .snapshots(),
+                  builder: (ctx, snapshot) {
+                    if (!snapshot.hasData) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+
+                    var x = snapshot.data!.docs
+                        .map((e) => Comerciante.from(e.data()));
+                    return ListView(
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      children: x.map((c) => Tienda()).toList(),
+                    );
+                  })
             ]),
       )),
     );
-  }
-}
-
-class Tienda extends StatelessWidget {
-  const Tienda({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          children: const [
-            CircleAvatar(
-              radius: 20, // Image radius
-              backgroundImage: NetworkImage(
-                  'https://d1csarkz8obe9u.cloudfront.net/posterpreviews/restaurant-logo-design-template-b281aeadaa832c28badd72c1f6c5caad_screen.jpg'),
-            ),
-            Text(
-              "Panaderia El buen gusto",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ],
-        ),
-        Container(
-          height: 240,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            children: [
-              Articulo(),
-              SizedBox(
-                width: 10,
-              ),
-              Articulo()
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class Articulo extends StatelessWidget {
-  const Articulo({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(children: [
-      Container(
-        height: 40,
-      ),
-      Container(
-        decoration: BoxDecoration(
-          color: Colors.red.shade100,
-          borderRadius: BorderRadius.all(Radius.circular(20)),
-        ),
-        width: 250,
-        child: Padding(
-            padding: EdgeInsets.all(12),
-            child: Column(
-              children: [
-                Stack(
-                  alignment: Alignment.center,
-                  clipBehavior: Clip.none,
-                  children: [
-                    Container(
-                      height: 80,
-                    ),
-                    Positioned(
-                        top: -40,
-                        child: CircleAvatar(
-                          radius: 60,
-                          backgroundImage: NetworkImage(
-                              'https://www.melskitchencafe.com/wp-content/uploads/rustic-bread-updated2-600x900.jpg'),
-                        )),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Quedan 30",
-                      style: TextStyle(
-                          color: Colors.green, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-                Text(
-                  "Pan Frances",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  children: [
-                    Text(
-                      "-20%",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Spacer(),
-                    Text(
-                      "S/. 0.5",
-                      style: TextStyle(decoration: TextDecoration.underline),
-                    ),
-                    Spacer(
-                      flex: 5,
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
-                      "S/. 0.3 U",
-                      style: TextStyle(fontSize: 20),
-                    )
-                  ],
-                )
-              ],
-            )),
-      )
-    ]);
   }
 }
