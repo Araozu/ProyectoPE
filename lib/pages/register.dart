@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import "package:flutter/material.dart";
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:proyecto_pe/routes/routes.dart';
 
 import '../auth_service.dart';
@@ -18,9 +19,6 @@ class RegisterState extends State<Register> {
 
   var db = FirebaseFirestore.instance;
 
-  String correo = "";
-  String contrasena = "";
-
   init() async {
     print("INNIT");
     var user = AuthService().getUser();
@@ -36,7 +34,8 @@ class RegisterState extends State<Register> {
           print("EXISTE CORREO");
 
           // Ir a inicio
-          Navigator.of(context).pushNamed(Routes.login);
+          Navigator.of(context).pushNamed(Routes.home);
+          return;
         }
       }
 
@@ -53,16 +52,66 @@ class RegisterState extends State<Register> {
     // init();
   }
 
-  void setCorreo(String? s) {
-    correo = s ?? "";
+
+  String nombres = "";
+  String apellidos = "";
+  String pais = "";
+  String region = "";
+  String provincia = "";
+  String distrito = "";
+
+
+  void setNombres(String? s) {
+    nombres = s ?? "";
   }
 
-  void setContrasena(String s) {
-    contrasena = s ?? "";
+  void setApellidos(String? s) {
+    apellidos = s ?? "";
   }
+
+  void setPais(String? s) {
+    pais = s ?? "";
+  }
+
+  void setRegion(String? s) {
+    region = s ?? "";
+  }
+
+  void setProvincia(String? s) {
+    provincia = s ?? "";
+  }
+
+  void setDistrito(String? s) {
+    distrito = s ?? "";
+  }
+
 
   void registrar() {
+    if (
+      nombres == "" || apellidos == "" || pais == ""
+      || region == "" || provincia == "" || distrito == ""
+    ) {
+      Fluttertoast.showToast(msg: "Por favor llena todos los campos.");
+      return;
+    }
 
+    var user = AuthService().getUser();
+    var correoUsuarioLogeado = user?.email!;
+
+    final usuario = <String, dynamic> {
+      "apellidos": apellidos,
+      "nombres": nombres,
+      "correo": correoUsuarioLogeado,
+      "distrito": distrito,
+      "pais": pais,
+      "provincia": provincia,
+      "region": region,
+    };
+
+    db.collection("usuario").add(usuario).then((DocumentReference doc) {
+      print("ALMACENADO");
+      Navigator.of(context).pushNamed(Routes.home);
+    });
   }
 
   @override
@@ -101,6 +150,8 @@ class RegisterState extends State<Register> {
                 ),
               ),
 
+              const Text("Completa tus datos para continuar"),
+
               Container(
                 margin: EdgeInsets.only(left: 33, right: 33, top: 40),
                 padding: EdgeInsets.only(left: 20, right: 20),
@@ -115,7 +166,7 @@ class RegisterState extends State<Register> {
                   )],
                 ),
                 alignment: Alignment.center,
-                child: const TextField(
+                child: TextField(
                   style: TextStyle(fontSize: 15),
                   cursorColor: Color(0xfff91f1f),
                   decoration: InputDecoration(
@@ -123,8 +174,12 @@ class RegisterState extends State<Register> {
                     enabledBorder: InputBorder.none,
                     focusedBorder: InputBorder.none,
                   ),
+                  onChanged: (s) {
+                    setNombres(s);
+                  },
                 ),
               ),
+
               Container(
                 margin: EdgeInsets.only(left: 33, right: 33, top: 30),
                 padding: EdgeInsets.only(left: 20, right: 20),
@@ -138,7 +193,7 @@ class RegisterState extends State<Register> {
                   )],
                 ),
                 alignment: Alignment.center,
-                child: const TextField(
+                child: TextField(
                   style: TextStyle(fontSize: 15),
                   cursorColor: Color(0xfff91f1f),
                   decoration: InputDecoration(
@@ -146,6 +201,9 @@ class RegisterState extends State<Register> {
                     enabledBorder: InputBorder.none,
                     focusedBorder: InputBorder.none,
                   ),
+                  onChanged: (s) {
+                    setApellidos(s);
+                  },
                 ),
               ),
 
@@ -171,8 +229,13 @@ class RegisterState extends State<Register> {
                     enabledBorder: InputBorder.none,
                     focusedBorder: InputBorder.none,
                   ),
+                  onChanged: (s) {
+                    setPais(s);
+                  },
                 ),
               ),
+
+
               Container(
                 margin: EdgeInsets.only(left: 33, right: 33, top: 30),
                 padding: EdgeInsets.only(left: 20, right: 20),
@@ -194,8 +257,13 @@ class RegisterState extends State<Register> {
                     enabledBorder: InputBorder.none,
                     focusedBorder: InputBorder.none,
                   ),
+                  onChanged: (s) {
+                    setRegion(s);
+                  },
                 ),
               ),
+
+
               Container(
                 margin: EdgeInsets.only(left: 33, right: 33, top: 30),
                 padding: EdgeInsets.only(left: 20, right: 20),
@@ -217,8 +285,13 @@ class RegisterState extends State<Register> {
                     enabledBorder: InputBorder.none,
                     focusedBorder: InputBorder.none,
                   ),
+                  onChanged: (s) {
+                    setProvincia(s);
+                  },
                 ),
               ),
+
+
               Container(
                 margin: EdgeInsets.only(left: 33, right: 33, top: 30),
                 padding: EdgeInsets.only(left: 20, right: 20),
@@ -240,6 +313,9 @@ class RegisterState extends State<Register> {
                     enabledBorder: InputBorder.none,
                     focusedBorder: InputBorder.none,
                   ),
+                  onChanged: (s) {
+                    setDistrito(s);
+                  },
                 ),
               ),
 
