@@ -71,80 +71,80 @@ class _ArticuloState extends State<Articulo> {
         });
       },
       child: Column(children: [
-      Container(
-        height: 40,
-      ),
-      Container(
-        decoration: BoxDecoration(
-          color: Colors.red.shade100,
-          borderRadius: BorderRadius.all(Radius.circular(20)),
+        Container(
+          height: 40,
         ),
-        width: 250,
-        child: Padding(
-            padding: EdgeInsets.all(12),
-            child: Column(
-              children: [
-                Stack(
-                  alignment: Alignment.center,
-                  clipBehavior: Clip.none,
-                  children: [
-                    Container(
-                      height: 80,
-                    ),
-                    Positioned(
-                        top: -40,
-                        child: CircleAvatar(
-                          radius: 60,
-                          backgroundImage: NetworkImage(publicacion.imagen),
-                        )),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Quedan ${publicacion.cantidad}",
-                      style: const TextStyle(
-                          color: Colors.green, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-                Text(
-                  publicacion.nombre,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  children: [
-                    Text(
-                      "-${percentage(publicacion.precio, publicacion.precioNormal)}%",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    const Spacer(),
-                    Text(
-                      "S/. ${publicacion.precioNormal}",
-                      style: TextStyle(decoration: TextDecoration.underline),
-                    ),
-                    const Spacer(
-                      flex: 5,
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
-                      "S/. ${publicacion.precio} U",
-                      style: const TextStyle(fontSize: 20),
-                    )
-                  ],
-                )
-              ],
-            )),
-      )
-    ])
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.red.shade100,
+            borderRadius: BorderRadius.all(Radius.circular(20)),
+          ),
+          width: 250,
+          child: Padding(
+              padding: EdgeInsets.all(12),
+              child: Column(
+                children: [
+                  Stack(
+                    alignment: Alignment.center,
+                    clipBehavior: Clip.none,
+                    children: [
+                      Container(
+                        height: 80,
+                      ),
+                      Positioned(
+                          top: -40,
+                          child: CircleAvatar(
+                            radius: 60,
+                            backgroundImage: NetworkImage(publicacion.imagen),
+                          )),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Quedan ${publicacion.cantidad}",
+                        style: const TextStyle(
+                            color: Colors.green, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                  Text(
+                    publicacion.nombre,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        "-${percentage(publicacion.precio, publicacion.precioNormal)}%",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const Spacer(),
+                      Text(
+                        "S/. ${publicacion.precioNormal}",
+                        style: TextStyle(decoration: TextDecoration.underline),
+                      ),
+                      const Spacer(
+                        flex: 5,
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        "S/. ${publicacion.precio} U",
+                        style: const TextStyle(fontSize: 20),
+                      )
+                    ],
+                  )
+                ],
+              )),
+        )
+      ]),
     );
   }
 }

@@ -53,6 +53,8 @@ class RegisterState extends State<Register> {
           status = 1;
           print("EXISTE CORREO");
 
+          prefs.setBool("comerciante", data["comerciante"] ?? false);
+
           // Ir a inicio
           Navigator.of(context).pushNamed(Routes.home);
           return;

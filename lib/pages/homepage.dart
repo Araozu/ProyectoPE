@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import "package:flutter/material.dart";
 import 'package:proyecto_pe/pages/articulo.dart';
 import 'package:proyecto_pe/pages/tienda.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../routes/routes.dart';
 
@@ -61,6 +62,24 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  bool esComerciante = false;
+
+  init() async {
+    final prefs = await SharedPreferences.getInstance();
+    final bool? comerciante = prefs.getBool('comerciante');
+
+    esComerciante = comerciante ?? false;
+    print("INIT: ${esComerciante}");
+
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    init();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -148,6 +167,13 @@ class _HomePageState extends State<HomePage> {
                   })
             ]),
       )),
+      floatingActionButton: esComerciante ? FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).pushNamed(Routes.crearPub);
+        },
+        backgroundColor: Colors.red,
+        child: Icon(Icons.add),
+      ) : null,
     );
   }
 }
