@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import "package:flutter/material.dart";
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:proyecto_pe/routes/routes.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../auth_service.dart';
 
@@ -16,6 +17,7 @@ class Register extends StatefulWidget {
 class RegisterState extends State<Register> {
   // 0 cargando, 1 tiene cuenta, -1 no tiene cuenta
   var status = 0;
+  var esComerciante = false;
 
   var db = FirebaseFirestore.instance;
 
@@ -23,6 +25,12 @@ class RegisterState extends State<Register> {
     print("INNIT");
     var user = AuthService().getUser();
     var correoUsuarioLogeado = user?.email;
+
+    // Recuperar si es comerciante
+    final prefs = await SharedPreferences.getInstance();
+    final bool? comerciante = prefs.getBool('comerciante');
+
+    esComerciante = comerciante ?? false;
 
     await db.collection("usuario").get().then((ev) {
       for (var doc in ev.docs) {
@@ -88,7 +96,7 @@ class RegisterState extends State<Register> {
 
   void registrar() {
     if (
-      nombres == "" || apellidos == "" || pais == ""
+      nombres == "" || pais == ""
       || region == "" || provincia == "" || distrito == ""
     ) {
       Fluttertoast.showToast(msg: "Por favor llena todos los campos.");
@@ -106,6 +114,7 @@ class RegisterState extends State<Register> {
       "pais": pais,
       "provincia": provincia,
       "region": region,
+      "comerciante": esComerciante,
     };
 
     db.collection("usuario").add(usuario).then((DocumentReference doc) {
@@ -170,7 +179,7 @@ class RegisterState extends State<Register> {
                   style: TextStyle(fontSize: 15),
                   cursorColor: Color(0xfff91f1f),
                   decoration: InputDecoration(
-                    hintText: "Nombres",
+                    hintText: esComerciante? "Nombre de empresa" : "Nombres",
                     enabledBorder: InputBorder.none,
                     focusedBorder: InputBorder.none,
                   ),
@@ -180,6 +189,7 @@ class RegisterState extends State<Register> {
                 ),
               ),
 
+              esComerciante ? Container() :
               Container(
                 margin: EdgeInsets.only(left: 33, right: 33, top: 30),
                 padding: EdgeInsets.only(left: 20, right: 20),
