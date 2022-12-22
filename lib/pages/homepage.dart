@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import "package:flutter/material.dart";
+import 'package:geolocator/geolocator.dart';
 import 'package:proyecto_pe/pages/articulo.dart';
 import 'package:proyecto_pe/pages/tienda.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -80,6 +81,48 @@ class _HomePageState extends State<HomePage> {
     init();
   }
 
+  String locationMessage = 'Current location of the user';
+  late String lat;
+  late String long;
+
+  //Getting current Location
+  Future<Position> _getCurrentLocation() async{
+    bool serviceEnabled =  await Geolocator.isLocationServiceEnabled();
+    if(!serviceEnabled){
+      return Future.error('Location services are disabled');
+    }
+    LocationPermission permission = await Geolocator.checkPermission();
+    if(permission == LocationPermission.denied){
+      permission = await Geolocator.requestPermission();
+      if(permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if(permission == LocationPermission.deniedForever){
+      return Future.error('Location permissions are permanently denied');
+    }
+    return await Geolocator.getCurrentPosition();
+  }
+
+  //Listen to location updates
+  void _liveLocation() {
+    LocationSettings locationSettings = const LocationSettings(
+      accuracy: LocationAccuracy.high,
+      distanceFilter: 100
+    );
+
+    Geolocator.getPositionStream(locationSettings: locationSettings)
+        .listen((Position position) {
+      lat = position.latitude.toString();
+      long = position.longitude.toString();
+
+      setState(() {
+        locationMessage = 'Latitude: $lat, Longitude: $long';
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,6 +145,18 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text(locationMessage, textAlign: TextAlign.center,),
+              ElevatedButton(onPressed: (){
+                _getCurrentLocation().then((value){
+                  lat = '${value.latitude}';
+                  long = '${value.longitude}';
+                  setState(() {
+                    locationMessage = 'Latitude: $lat, Longitud: $long';
+                  });
+                  _liveLocation();
+                });
+              }, child: const Text('Get position')),
+
               const Text(
                 "¿Qué\ncomeré?",
                 style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
