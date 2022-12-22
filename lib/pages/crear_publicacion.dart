@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto_pe/pages/articulo.dart';
 import 'package:proyecto_pe/routes/routes.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 import '../auth_service.dart';
 
@@ -43,14 +45,114 @@ class _CrearPublicacionState extends State<CrearPublicacion> {
       "precio": precioDescuento,
       "correoComerciante": correoUsuarioLogeado,
     };
-    
+
     FirebaseFirestore.instance
         .collection("publicacion")
         .add(pub)
         .then((_) {
-          Navigator.of(context).pushNamed(Routes.home);
-        });
+      Navigator.of(context).pushNamed(Routes.home);
+    });
   }
+
+  File? imagen = null;
+  final picker = ImagePicker();
+
+  Future selImagen(op) async{
+    var pickedFile;
+    if(op == 1){
+      pickedFile = await picker.getImage(source: ImageSource.camera);
+    }else{
+      pickedFile = await   picker.getImage(source: ImageSource.gallery);
+    }
+
+    setState(() {
+      if(pickedFile != null){
+        imagen = File(pickedFile.path);
+      }else{
+        print('Imagen no seleccionada');
+      }
+    });
+    Navigator.of(context).pop();
+  }
+
+  opciones(context){
+    showDialog(
+        context: context,
+        builder: (BuildContext context){
+          return AlertDialog(
+            contentPadding: EdgeInsets.all(0),
+            content: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    InkWell(
+                      onTap: (){
+                        selImagen(1);
+                      },
+                      child: Container(
+                          padding: EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                              border: Border(bottom: BorderSide(width: 1, color: Colors.grey))
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text('Tomar una foto', style: TextStyle(
+                                    fontSize: 16
+                                ),),
+                              ),
+                              Icon(Icons.camera_alt, color: Colors.redAccent)
+                            ],
+                          )
+                      ),
+                    ),
+                    InkWell(
+                      onTap: (){
+                        selImagen(2);
+                      },
+                      child: Container(
+                          padding: EdgeInsets.all(20),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text('Seleccionar una foto', style: TextStyle(
+                                    fontSize: 16
+                                ),),
+                              ),
+                              Icon(Icons.image, color: Colors.redAccent)
+                            ],
+                          )
+                      ),
+                    ),
+                    InkWell(
+                      onTap: (){
+                        Navigator.of(context).pop();
+                      },
+                      child: Container(
+                          padding: EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                              color: Colors.red
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text('Cancelar', style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.white
+                                ), textAlign: TextAlign.center,),
+                              )
+                            ],
+                          )
+                      ),
+                    )
+                  ],
+                )
+            ),
+          );
+        }
+    );
+  }
+
+
 
   @override
   Widget build(BuildContext ctx) {
@@ -188,33 +290,25 @@ class _CrearPublicacionState extends State<CrearPublicacion> {
             ),
 
             Container(
-              margin: const EdgeInsets.only(left: 33, right: 33, top: 40),
-              padding: const EdgeInsets.only(left: 20, right: 20),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(50),
+                margin: const EdgeInsets.only(left: 33, right: 33, top: 40),
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                alignment: Alignment.center,
+                child: Column(
+                  children: [
+                    ElevatedButton(
+                      onPressed: (){
+                        opciones(context);
+                      },
 
-                color: Colors.grey[300],
-                boxShadow: const [BoxShadow(
-                    offset: Offset(0, 10),
-                    blurRadius: 50,
-                    color: Color(0xffEEEEEE)
-                )],
-              ),
-              alignment: Alignment.center,
-              child: TextField(
-                style: TextStyle(fontSize: 15),
-                cursorColor: Color(0xfff91f1f),
-                decoration: const InputDecoration(
-                  hintText: "Imagen",
-                  enabledBorder: InputBorder.none,
-                  focusedBorder: InputBorder.none,
-                ),
-                onChanged: (s) {
-                  img = s;
-                },
-              ),
+                      child: Text('Selecciona una imagen'),
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    imagen == null ? Center(): Image.file(imagen!)
+                  ],
+                )
             ),
-
 
             Container(
               margin: const EdgeInsets.only(left: 33, right: 33, top: 40),
