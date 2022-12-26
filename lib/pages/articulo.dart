@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import 'package:proyecto_pe/pages/homepage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../routes/routes.dart';
@@ -77,11 +76,11 @@ class _ArticuloState extends State<Articulo> {
         Container(
           decoration: BoxDecoration(
             color: Colors.red.shade100,
-            borderRadius: BorderRadius.all(Radius.circular(20)),
+            borderRadius: const BorderRadius.all(Radius.circular(20)),
           ),
           width: 250,
           child: Padding(
-              padding: EdgeInsets.all(12),
+              padding: const EdgeInsets.all(12),
               child: Column(
                 children: [
                   Stack(
@@ -120,12 +119,12 @@ class _ArticuloState extends State<Articulo> {
                     children: [
                       Text(
                         "-${percentage(publicacion.precio, publicacion.precioNormal)}%",
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       const Spacer(),
                       Text(
                         "S/. ${publicacion.precioNormal}",
-                        style: TextStyle(decoration: TextDecoration.underline),
+                        style: const TextStyle(decoration: TextDecoration.underline),
                       ),
                       const Spacer(
                         flex: 5,
