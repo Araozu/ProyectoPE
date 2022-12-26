@@ -43,6 +43,7 @@ class RegisterState extends State<Register> {
     final bool? comerciante = prefs.getBool('comerciante');
 
     esComerciante = comerciante ?? false;
+    print("Comerciante? $esComerciante");
 
     await db.collection("usuario").get().then((ev) {
       for (var doc in ev.docs) {
@@ -364,7 +365,7 @@ class RegisterState extends State<Register> {
               ),
 
               Container(height: 20),
-              const Text("Ubicacion del negocio:"),
+              esComerciante ? const Text("Ubicacion del negocio:") : Container(),
 
               esComerciante ? SizedBox(
                 height: 400,

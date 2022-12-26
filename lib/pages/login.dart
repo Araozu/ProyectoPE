@@ -15,6 +15,14 @@ class _LoginState extends State<Login> {
   bool esComerciante = false;
 
   @override
+  void initState() {
+    super.initState();
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setBool('comerciante', false);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(

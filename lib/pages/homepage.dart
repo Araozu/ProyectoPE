@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import "package:flutter/material.dart";
 import 'package:geolocator/geolocator.dart';
-import 'package:proyecto_pe/pages/articulo.dart';
 import 'package:proyecto_pe/pages/tienda.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:haversine_distance/haversine_distance.dart';
 
 import '../routes/routes.dart';
 
@@ -64,10 +64,16 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool esComerciante = false;
+  Position? position;
 
   init() async {
     final prefs = await SharedPreferences.getInstance();
     final bool? comerciante = prefs.getBool('comerciante');
+
+    try {
+      position = await _getCurrentLocation();
+      print("Ubicacion obtenida");
+    } catch (e) {}
 
     esComerciante = comerciante ?? false;
     print("INIT: ${esComerciante}");
@@ -81,46 +87,25 @@ class _HomePageState extends State<HomePage> {
     init();
   }
 
-  String locationMessage = 'Current location of the user';
-  late String lat;
-  late String long;
-
   //Getting current Location
-  Future<Position> _getCurrentLocation() async{
-    bool serviceEnabled =  await Geolocator.isLocationServiceEnabled();
-    if(!serviceEnabled){
+  Future<Position> _getCurrentLocation() async {
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
       return Future.error('Location services are disabled');
     }
+
     LocationPermission permission = await Geolocator.checkPermission();
-    if(permission == LocationPermission.denied){
+    if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
-      if(permission == LocationPermission.denied) {
+      if (permission == LocationPermission.denied) {
         return Future.error('Location permissions are denied');
       }
     }
 
-    if(permission == LocationPermission.deniedForever){
+    if (permission == LocationPermission.deniedForever) {
       return Future.error('Location permissions are permanently denied');
     }
     return await Geolocator.getCurrentPosition();
-  }
-
-  //Listen to location updates
-  void _liveLocation() {
-    LocationSettings locationSettings = const LocationSettings(
-      accuracy: LocationAccuracy.high,
-      distanceFilter: 100
-    );
-
-    Geolocator.getPositionStream(locationSettings: locationSettings)
-        .listen((Position position) {
-      lat = position.latitude.toString();
-      long = position.longitude.toString();
-
-      setState(() {
-        locationMessage = 'Latitude: $lat, Longitude: $long';
-      });
-    });
   }
 
   @override
@@ -145,62 +130,34 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(locationMessage, textAlign: TextAlign.center,),
-              ElevatedButton(onPressed: (){
-                _getCurrentLocation().then((value){
-                  lat = '${value.latitude}';
-                  long = '${value.longitude}';
-                  setState(() {
-                    locationMessage = 'Latitude: $lat, Longitud: $long';
-                  });
-                  _liveLocation();
-                });
-              }, child: const Text('Get position')),
-
               const Text(
                 "¿Qué\ncomeré?",
                 style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
               ),
-
-              /*
-              TextField(
-                decoration: InputDecoration(
-                    hintText: 'Comida o lugar',
-                    contentPadding: const EdgeInsets.all(15),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30))),
-                onChanged: (value) {
-                  // do something
-                },
-              ),
-              */
-
               SizedBox(
                   height: 40,
                   child: ListView(
                     padding: const EdgeInsets.all(8),
                     scrollDirection: Axis.horizontal,
                     children: [
-                      Text("Comidas"),
+                      const Text("Comidas"),
                       Container(width: 10),
-                      Text(
-                        "Pan",
-                        style: TextStyle(
-                            // color: Colors.red,
-                            // decoration: TextDecoration.underline),
-                        )),
+                      const Text("Pan",
+                          style: TextStyle(
+                              // color: Colors.red,
+                              // decoration: TextDecoration.underline),
+                              )),
                       Container(width: 10),
-                      Text("Bebidas"),
+                      const Text("Bebidas"),
                       Container(width: 10),
-                      Text("Provisiones"),
+                      const Text("Provisiones"),
                       Container(width: 10),
-                      Text("Pasteles"),
+                      const Text("Pasteles"),
                       Container(width: 10),
-                      Text("Verduras"),
+                      const Text("Verduras"),
                     ],
-                  )),
-
-
+                  )
+              ),
               StreamBuilder(
                   stream: FirebaseFirestore.instance
                       .collection("usuario")
@@ -213,22 +170,60 @@ class _HomePageState extends State<HomePage> {
                       );
                     }
 
-                    var x = snapshot.data!.docs.map((e) => Comerciante.from(e.data()));
+                    List<Comerciante> comerciantes;
+                    if (position != null) {
+                      var posicionUsuario = Location(position!.latitude, position!.longitude);
+                      var haversine = HaversineDistance();
+
+                      comerciantes = snapshot
+                          .data!
+                          .docs
+                          .map((e) => Comerciante.from(e.data()))
+                          .toList();
+
+                      comerciantes.sort((c1, c2) {
+                        var pos1 = Location(c1.long, c1.lat);
+                        var pos2 = Location(c2.long, c2.lat);
+
+                        var distance1 = haversine.haversine(
+                            pos1,
+                            posicionUsuario,
+                            Unit.METER
+                        ).floor();
+                        var distance2 = haversine.haversine(
+                            pos2,
+                            posicionUsuario,
+                            Unit.METER
+                        ).floor();
+
+                        return distance1 < distance2 ? 1 : -1;
+                      });
+                    }
+                    else {
+                      comerciantes = snapshot
+                          .data!
+                          .docs
+                          .map((e) => Comerciante.from(e.data()))
+                          .toList();
+                    }
+
                     return ListView(
                       scrollDirection: Axis.vertical,
                       shrinkWrap: true,
-                      children: x.map((c) => Tienda(comerciante: c)).toList(),
+                      children: comerciantes.map((c) => Tienda(comerciante: c)).toList(),
                     );
                   })
             ]),
       )),
-      floatingActionButton: esComerciante ? FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).pushNamed(Routes.crearPub);
-        },
-        backgroundColor: Colors.red,
-        child: Icon(Icons.add),
-      ) : null,
+      floatingActionButton: esComerciante
+          ? FloatingActionButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed(Routes.crearPub);
+              },
+              backgroundColor: Colors.red,
+              child: Icon(Icons.add),
+            )
+          : null,
     );
   }
 }
