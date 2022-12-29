@@ -6,6 +6,7 @@ import 'package:proyecto_pe/pages/perfil.dart';
 import 'package:proyecto_pe/routes/routes.dart';
 
 import '../pages/mapa.dart';
+import '../pages/publicaciones_negocio.dart';
 
 abstract class Pages {
   static Map<String, Widget Function(BuildContext)> routes = {
@@ -14,5 +15,6 @@ abstract class Pages {
     Routes.perfil: (BuildContext context) => const Perfil(),
     Routes.mapa: (BuildContext context) => const Mapa(),
     Routes.crearPub: (BuildContext context) => CrearPublicacion(),
+    Routes.publicaciones: (BuildContext context) => PublicacionNegocio(),
   };
 }

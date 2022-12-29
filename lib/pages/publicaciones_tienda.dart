@@ -5,18 +5,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../routes/routes.dart';
 import 'articulo.dart';
+import 'articulo_negocio.dart';
 
-class Tienda extends StatefulWidget {
-  const Tienda({Key? key, required this.comerciante}) : super(key: key);
+class TiendaPublicaciones extends StatefulWidget {
+  const TiendaPublicaciones({Key? key, required this.comerciante}) : super(key: key);
 
   final Comerciante comerciante;
 
   @override
-  State<Tienda> createState() => _TiendaState(comerciante);
+  State<TiendaPublicaciones> createState() => _TiendaPublicacionesState(comerciante);
 }
 
-class _TiendaState extends State<Tienda> {
-  _TiendaState(this.comerciante);
+class _TiendaPublicacionesState extends State<TiendaPublicaciones> {
+  _TiendaPublicacionesState(this.comerciante);
 
   final Comerciante comerciante;
 
@@ -32,13 +33,7 @@ class _TiendaState extends State<Tienda> {
                   'https://d1csarkz8obe9u.cloudfront.net/posterpreviews/restaurant-logo-design-template-b281aeadaa832c28badd72c1f6c5caad_screen.jpg'),
             ),
             GestureDetector(
-              onTap: () {
-                var nav = Navigator.of(context);
-                SharedPreferences.getInstance().then((prefs) async {
-                  await prefs.setString("nombres",comerciante.nombres);
-                  nav.pushNamed(Routes.publicaciones);
-                });
-              },
+
               child: Text(
                 comerciante.nombres,
                 style: TextStyle(fontWeight: FontWeight.bold),
@@ -49,7 +44,7 @@ class _TiendaState extends State<Tienda> {
 
         ),
         Container(
-          height: 240,
+          height: 640,
           child: StreamBuilder(
             stream: FirebaseFirestore.instance
             .collection("publicacion")
@@ -65,8 +60,8 @@ class _TiendaState extends State<Tienda> {
               var x = snapshot.data!.docs.map((d) => Publicacion.from(d.data()));
 
               return ListView(
-                scrollDirection: Axis.horizontal,
-                children: x.map((p) => Articulo(publicacion: p, lat: comerciante.lat, long: comerciante.long,)).toList(),
+                scrollDirection: Axis.vertical,
+                children: x.map((p) => ArticuloNegocio(publicacion: p, lat: comerciante.lat, long: comerciante.long,)).toList(),
               );
             },
           ),
